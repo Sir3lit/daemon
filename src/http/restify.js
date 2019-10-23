@@ -68,8 +68,9 @@ RestServer.pre((req, res, next) => {
     return next();
 });
 
-RestServer.on('after', Restify.auditLogger({
+RestServer.on('after', Restify.plugins.auditLogger({
     log: RestLogger,
+    event: 'after',
 }));
 
 // Export this for Socket.io to make use of.

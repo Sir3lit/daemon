@@ -67,6 +67,7 @@
     "randomstring": "^1.1",
     "request": "^2.88.0",
     "restify": "^4.3.4",
+    "restify-cors-middleware": "^1.1.1",
     "rfr": "^1.2",
     "socket.io": "^2.3.0",
     "socketio-file-upload": "^0.7.0",

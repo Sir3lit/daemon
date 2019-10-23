@@ -25,6 +25,7 @@
 const rfr = require('rfr');
 const Restify = require('restify');
 const Util = require('util');
+const corsMiddleware = require('restify-cors-middleware');
 
 const Log = rfr('src/helpers/logger.js');
 const LoadConfig = rfr('src/helpers/config.js');
@@ -33,14 +34,17 @@ const RestServer = rfr('src/http/restify.js');
 const RouteController = rfr('src/controllers/routes.js');
 
 const Config = new LoadConfig();
+const cors = corsMiddleware({
+    origins: ['*'],
+});
 
 let Auth;
 let Routes;
 
-RestServer.use(Restify.jsonBodyParser());
-RestServer.use(Restify.CORS()); // eslint-disable-line
+RestServer.use(Restify.plugins.jsonBodyParser());
+RestServer.use(cors.actual);
 
-RestServer.opts(/.*/, (req, res, next) => {
+RestServer.opts('/.*/', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', req.header('Access-Control-Request-Method'));
     res.header('Access-Control-Allow-Headers', req.header('Access-Control-Request-Headers'));
@@ -164,7 +168,7 @@ RestServer.get('/v1/server/log', (req, res, next) => {
     return next();
 });
 
-RestServer.get(/^\/v1\/server\/directory\/?(.+)*/, (req, res, next) => {
+RestServer.get('/^\/v1\/server\/directory\/?(.+)*/', (req, res, next) => {
     Routes.getServerDirectory();
     return next();
 });
@@ -179,7 +183,7 @@ RestServer.post('/v1/server/file/copy', (req, res, next) => {
     return next();
 });
 
-RestServer.del(/^\/v1\/server\/file\/f\/(.+)/, (req, res, next) => {
+RestServer.del('/^\/v1\/server\/file\/f\/(.+)/', (req, res, next) => {
     Routes.deleteServerFile();
     return next();
 });
@@ -189,7 +193,7 @@ RestServer.post('/v1/server/file/delete', (req, res, next) => {
     return next();
 });
 
-RestServer.post(/^\/v1\/server\/file\/(move|rename)/, (req, res, next) => {
+RestServer.post('/^\/v1\/server\/file\/(move|rename)/', (req, res, next) => {
     Routes.postFileMove();
     return next();
 });
@@ -204,12 +208,12 @@ RestServer.post('/v1/server/file/decompress', (req, res, next) => {
     return next();
 });
 
-RestServer.get(/^\/v1\/server\/file\/stat\/(.+)/, (req, res, next) => {
+RestServer.get('/^\/v1\/server\/file\/stat\/(.+)/', (req, res, next) => {
     Routes.getServerFileStat();
     return next();
 });
 
-RestServer.get(/^\/v1\/server\/file\/f\/(.+)/, (req, res, next) => {
+RestServer.get('/^\/v1\/server\/file\/f\/(.+)/', (req, res, next) => {
     Routes.getServerFile();
     return next();
 });
