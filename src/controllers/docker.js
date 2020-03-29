@@ -439,6 +439,7 @@ class Docker {
             Memory: Math.round(this.hardlimit(config.memory) * 1000000),
             MemoryReservation: Math.round(config.memory * 1000000),
             MemorySwap: -1,
+            CpusetCpus: _.get(config, 'cpu_setCpus', ''),
         };
 
         if (config.swap >= 0) {
@@ -565,6 +566,7 @@ class Docker {
                         CpuQuota: (config.cpu > 0) ? config.cpu * 1000 : -1,
                         CpuPeriod: 100000,
                         CpuShares: _.get(config, 'cpu_shares', 1024),
+                        CpusetCpus: _.get(config, 'cpu_setCpus', ''),
                         BlkioWeight: config.io,
                         Dns: Config.get('docker.dns', ['8.8.8.8', '8.8.4.4']),
                         LogConfig: {
